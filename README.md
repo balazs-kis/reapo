@@ -42,5 +42,5 @@ Prune actions always keep the current branch and `main`/`master`.
 
 ## Demo
 
-<video src="https://github.com/balazs-kis/reapo/raw/main/assets/demo.mp4" controls width="720"></video>
+<video src="https://github.com/balazs-kis/reapo/raw/main/assets/demo-small.mp4" controls width="720"></video>
 
