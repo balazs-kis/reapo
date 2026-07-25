@@ -6,10 +6,11 @@ namespace Reapo.Ui;
 
 public sealed class ActionMenuPrompt
 {
-    public IRepoAction? Show(IReadOnlyList<IRepoAction> actions)
+    public IRepoAction? Show(IReadOnlyList<IRepoAction> actions, IRenderable? header = null)
     {
         if (actions.Count == 0)
         {
+            if (header != null) AnsiConsole.Write(header);
             AnsiConsole.MarkupLine("[grey]No actions available yet.[/]");
             AnsiConsole.MarkupLine("[grey](press any key to go back)[/]");
             Console.ReadKey(intercept: true);
@@ -28,7 +29,7 @@ public sealed class ActionMenuPrompt
         IRepoAction? result = null;
         var done = false;
 
-        AnsiConsole.Live(Render(ordered, index, armed))
+        AnsiConsole.Live(Compose(header, Render(ordered, index, armed)))
             .Start(ctx =>
             {
                 ctx.Refresh();
@@ -71,12 +72,19 @@ public sealed class ActionMenuPrompt
                             break;
                     }
 
-                    ctx.UpdateTarget(Render(ordered, index, armed));
+                    ctx.UpdateTarget(Compose(header, Render(ordered, index, armed)));
                     ctx.Refresh();
                 }
             });
 
         return result;
+    }
+
+    private static IRenderable Compose(IRenderable? header, IRenderable menu)
+    {
+        if (header is null) return menu;
+        var rows = new Rows(header, menu);
+        return rows;
     }
 
     private static IRenderable Render(IReadOnlyList<IRepoAction> ordered, int index, bool armed)

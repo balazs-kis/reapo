@@ -82,11 +82,11 @@ public sealed class AppShell
         {
             AnsiConsole.Clear();
             _cancellation.ResetForNextAction();
-            var outcome = await _branchSummaryView.RenderAsync(single.Repo, fetch, _cancellation.Token);
-            if (outcome == BranchSummaryOutcome.Back) return;
+            var summary = await _branchSummaryView.BuildAsync(single.Repo, fetch, _cancellation.Token);
+            if (summary.Outcome == BranchSummaryOutcome.Back) return;
 
             var actions = _registry.GetActionsFor(target);
-            var picked = _actionMenuPrompt.Show(actions);
+            var picked = _actionMenuPrompt.Show(actions, summary.Panel);
             if (picked is null) return;
 
             await RunActionAsync(picked, target);

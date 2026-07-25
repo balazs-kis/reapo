@@ -1,6 +1,7 @@
 using Reapo.Discovery;
 using Reapo.Git;
 using Spectre.Console;
+using Spectre.Console.Rendering;
 
 namespace Reapo.Ui;
 
@@ -9,6 +10,8 @@ public enum BranchSummaryOutcome
     Continue,
     Back,
 }
+
+public sealed record BranchSummaryResult(BranchSummaryOutcome Outcome, IRenderable? Panel);
 
 public sealed class BranchSummaryView
 {
@@ -21,12 +24,12 @@ public sealed class BranchSummaryView
         _cache = cache;
     }
 
-    public async Task<BranchSummaryOutcome> RenderAsync(RepoInfo repo, bool fetch, CancellationToken ct)
+    public async Task<BranchSummaryResult> BuildAsync(RepoInfo repo, bool fetch, CancellationToken ct)
     {
         if (fetch)
         {
             var fetchOutcome = await TryFetchAsync(repo, ct);
-            if (fetchOutcome == BranchSummaryOutcome.Back) return BranchSummaryOutcome.Back;
+            if (fetchOutcome == BranchSummaryOutcome.Back) return new BranchSummaryResult(BranchSummaryOutcome.Back, null);
         }
 
         IReadOnlyList<BranchInfo> branches;
@@ -36,12 +39,11 @@ public sealed class BranchSummaryView
         }
         catch (Exception ex)
         {
-            return RenderFatalReadFailure(ex);
+            return new BranchSummaryResult(RenderFatalReadFailure(ex), null);
         }
 
         _cache.RefreshOne(repo, _git);
-        RenderHeaderAndGrid(repo, branches);
-        return BranchSummaryOutcome.Continue;
+        return new BranchSummaryResult(BranchSummaryOutcome.Continue, BuildHeaderAndGrid(repo, branches));
     }
 
     private async Task<BranchSummaryOutcome> TryFetchAsync(RepoInfo repo, CancellationToken ct)
@@ -113,7 +115,7 @@ public sealed class BranchSummaryView
         return BranchSummaryOutcome.Back;
     }
 
-    private static void RenderHeaderAndGrid(
+    private static IRenderable BuildHeaderAndGrid(
         RepoInfo repo,
         IReadOnlyList<BranchInfo> branches)
     {
@@ -145,8 +147,7 @@ public sealed class BranchSummaryView
             Padding = new Padding(2, 0, 2, 0),
         };
 
-        AnsiConsole.Write(panel);
-        AnsiConsole.WriteLine();
+        return panel;
     }
 
     private sealed record RowData(BranchInfo Branch, string Tracked, string Incoming, string Outgoing, string Tree);
