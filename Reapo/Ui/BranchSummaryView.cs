@@ -23,12 +23,10 @@ public sealed class BranchSummaryView
 
     public async Task<BranchSummaryOutcome> RenderAsync(RepoInfo repo, bool fetch, CancellationToken ct)
     {
-        DateTime? fetchedAtUtc = null;
         if (fetch)
         {
-            var (fetchOutcome, ts) = await TryFetchAndCaptureTimestampAsync(repo, ct);
+            var fetchOutcome = await TryFetchAsync(repo, ct);
             if (fetchOutcome == BranchSummaryOutcome.Back) return BranchSummaryOutcome.Back;
-            fetchedAtUtc = ts;
         }
 
         IReadOnlyList<BranchInfo> branches;
@@ -42,13 +40,11 @@ public sealed class BranchSummaryView
         }
 
         _cache.RefreshOne(repo, _git);
-        RenderHeaderAndGrid(repo, branches, fetchedAtUtc);
+        RenderHeaderAndGrid(repo, branches);
         return BranchSummaryOutcome.Continue;
     }
 
-    private async Task<(BranchSummaryOutcome Outcome, DateTime? FetchedAtUtc)> TryFetchAndCaptureTimestampAsync(
-        RepoInfo repo,
-        CancellationToken ct)
+    private async Task<BranchSummaryOutcome> TryFetchAsync(RepoInfo repo, CancellationToken ct)
     {
         while (true)
         {
@@ -59,7 +55,7 @@ public sealed class BranchSummaryView
                     .StartAsync(
                         $"Fetching from origin for [bold deepskyblue1]{Markup.Escape(repo.Name)}[/]...",
                         async _ => await _git.FetchAsync(repo.FullPath, ct));
-                return (BranchSummaryOutcome.Continue, DateTime.UtcNow);
+                return BranchSummaryOutcome.Continue;
             }
             catch (OperationCanceledException)
             {
@@ -73,8 +69,8 @@ public sealed class BranchSummaryView
             switch (PromptOnFetchFailure())
             {
                 case FetchFailureChoice.Retry:          continue;
-                case FetchFailureChoice.ContinueCached: return (BranchSummaryOutcome.Continue, null);
-                default:                                return (BranchSummaryOutcome.Back, null);
+                case FetchFailureChoice.ContinueCached: return BranchSummaryOutcome.Continue;
+                default:                                return BranchSummaryOutcome.Back;
             }
         }
     }
@@ -119,13 +115,11 @@ public sealed class BranchSummaryView
 
     private static void RenderHeaderAndGrid(
         RepoInfo repo,
-        IReadOnlyList<BranchInfo> branches,
-        DateTime? fetchedAtUtc)
+        IReadOnlyList<BranchInfo> branches)
     {
         var untracked = branches.Count(b => !b.HasRemote);
         var trackingSummary = untracked == 0 ? "all tracked" : $"{untracked} untracked";
-        var fetchedSuffix = fetchedAtUtc is { } ts ? $", fetched {FormatAge(ts)} ago" : string.Empty;
-        var rightSide = $"({branches.Count} {(branches.Count == 1 ? "branch" : "branches")}, {trackingSummary}{fetchedSuffix})";
+        var rightSide = $"({branches.Count} {(branches.Count == 1 ? "branch" : "branches")}, {trackingSummary})";
 
         var rows = branches.Select(BuildRow).ToList();
         var nameBudget = ComputeNameBudget(rows);
@@ -183,10 +177,4 @@ public sealed class BranchSummaryView
 
     private static string TruncateName(string name, int budget) =>
         name.Length > budget ? name[..(budget - 3)] + "..." : name;
-
-    private static string FormatAge(DateTime fetchedAtUtc)
-    {
-        var seconds = (int)Math.Max(0, (DateTime.UtcNow - fetchedAtUtc).TotalSeconds);
-        return seconds < 60 ? $"{seconds}s" : $"{seconds / 60}m";
-    }
 }
