@@ -34,8 +34,8 @@ public static class Theme
 
     public static string ForSeverity(ActionSeverity severity, string text) => severity switch
     {
-        ActionSeverity.Dangerous => $"🚨 [red]{Markup.Escape(text)}[/]",
-        ActionSeverity.Risky     => $"⚠️ [yellow]{Markup.Escape(text)}[/]",
-        _                        => $"🟢 [lightgreen]{Markup.Escape(text)}[/]",
+        ActionSeverity.Dangerous => $"[red]▲ {Markup.Escape(text)}[/]",
+        ActionSeverity.Risky     => $"[yellow]▲ {Markup.Escape(text)}[/]",
+        _                        => $"[lightgreen]✓ {Markup.Escape(text)}[/]",
     };
 }

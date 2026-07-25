@@ -6,12 +6,12 @@ public sealed record BranchChipSet(string Tracked, string Incoming, string Outgo
 
 public static class BranchChips
 {
-    private const string Link        = ""; // fa link
-    private const string Unlink      = ""; // fa unlink
-    private const string ArrowDown   = ""; // fa arrow-down
-    private const string ArrowUp     = ""; // fa arrow-up
-    private const string Pencil      = ""; // fa pencil
-    private const string Ghost       = ""; // codicon trash U+EEFE
+    private const string Link        = "◉";
+    private const string Unlink      = "○";
+    private const string ArrowDown   = "↓";
+    private const string ArrowUp     = "↑";
+    private const string Pencil      = "~";
+    private const string Ghost       = "◌";
     private const string MiddleDot   = "·";
 
     /// <summary>Repo-list row: shows the current branch's status; working-tree edits always shown.</summary>

@@ -188,7 +188,7 @@ public sealed class RepoAction : IRepoAction
             case RepoOutcomeKind.Processed:
                 var failed = o.Branches.Any(b => b.Kind == BranchOutcomeKind.Failed);
                 var updated = o.Branches.Any(b => b.Kind == BranchOutcomeKind.Updated);
-                if (failed && updated) return ("[yellow]⚠ partial[/]", Markup.Escape(SummarizeBranches(o.Branches)));
+                if (failed && updated) return ("[yellow]▲ partial[/]", Markup.Escape(SummarizeBranches(o.Branches)));
                 if (failed)            return ("[red]✗ failed[/]",   Markup.Escape(SummarizeBranches(o.Branches)));
                 if (updated)           return ("[green3]✓ updated[/]", Markup.Escape(SummarizeBranches(o.Branches)));
                 return ("[grey]· no changes[/]", Markup.Escape(SummarizeBranches(o.Branches)));
