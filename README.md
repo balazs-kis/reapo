@@ -4,6 +4,10 @@ An interactive terminal tool for managing a folder full of git repositories. Poi
 directory, and it discovers the git repos inside and lets you fetch, update, and prune branches
 across all of them or one at a time.
 
+![Main screen](assets/main_screen.png)
+![All-repos actions](assets/all_repo_actions.png)
+![Single-repo actions](assets/one_repo_actions.png)
+
 ## Usage
 
 ```
@@ -35,3 +39,8 @@ Prune actions always keep the current branch and `main`/`master`.
 
 - .NET 10 SDK
 - `git` on your `PATH`
+
+## Demo
+
+<video src="https://github.com/balazs-kis/reapo/raw/main/assets/demo.mp4" controls width="720"></video>
+

@@ -21,7 +21,8 @@
       "Bash(unzip -p ../reapo.zip \"reapo/Reapo/Ui/BranchChips.cs\")",
       "Bash(xxd)",
       "Bash(perl -i -pe ' *)",
-      "Bash(sed -n '/private const string Link/,/private const string MiddleDot/p' Reapo/Ui/BranchChips.cs)"
+      "Bash(sed -n '/private const string Link/,/private const string MiddleDot/p' Reapo/Ui/BranchChips.cs)",
+      "Bash(git remote *)"
     ]
   }
 }
