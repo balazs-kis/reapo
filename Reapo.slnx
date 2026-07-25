@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Reapo/Reapo.csproj" />
+  <Project Path="Reapo.Tests/Reapo.Tests.csproj" />
+</Solution>

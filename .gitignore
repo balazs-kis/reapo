@@ -1,0 +1,12 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# IDE / editor
+.idea/
+.vs/
+*.user
+*.suo
+
+# OS
+.DS_Store

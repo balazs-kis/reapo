@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet add *)",
+      "Bash(dotnet build *)",
+      "Bash(dotnet new *)",
+      "Bash(dotnet test *)",
+      "Bash(dotnet run *)",
+      "Bash(dotnet list *)",
+      "Bash(dotnet --version)",
+      "Bash(git config *)",
+      "Bash(gh auth *)",
+      "Bash(rm -f All/AllReposActionBase.cs All/FetchStatusAction.cs All/UpdateCleanReposAction.cs All/UpdateAllReposAction.cs All/UpdateCleanOnMainAction.cs All/UpdateAllOnMainAction.cs All/PruneUntrackedBranchesAction.cs All/PruneAllBranchesAction.cs Single/SingleRepoActionBase.cs Single/FetchRepoAction.cs Single/UpdateRepoAction.cs Single/DiscardLocalChangesAction.cs Single/PruneUntrackedBranchesAction.cs Single/PruneAllBranchesAction.cs)",
+      "Bash(ls Single/)",
+      "Bash(perl -i -pe 's/\\\\.Scan\\\\\\(_root\\\\\\)/.Scan\\(Root\\)/g' Reapo.Tests/Discovery/RepoScannerTests.cs)",
+      "Bash(perl -i -pe 's/InitBareRepo\\\\\\(_root, /InitBareRepo\\(/g; s/InitRepo\\\\\\(_root, /InitRepo\\(/g' Reapo.Tests/Git/GitFacadeBranchTests.cs)",
+      "Bash(perl -i -pe 's/\\\\b_root\\\\b/Root/g' Reapo.Tests/Actions/All/BranchUpdaterTests.cs)",
+      "Bash(perl -i -pe 's/InitRepo\\\\\\(out /InitRepoWithCommit\\(out /g; s/Path\\\\.Combine\\\\\\(_root, \"remote\\\\.git\"\\\\\\)/InitBareRepo\\(\"remote.git\"\\)/g' Reapo.Tests/Actions/RepoOperationsPruneTests.cs)",
+      "Bash(perl -i -ne 'print unless /^\\\\s*Repository\\\\.Init\\\\\\(bare, isBare: true\\\\\\);\\\\s*$/' Reapo.Tests/Actions/RepoOperationsPruneTests.cs)",
+      "Bash(unzip -Z1 ../reapo.zip)",
+      "Bash(unzip -p ../reapo.zip \"reapo/Reapo/Ui/BranchChips.cs\")",
+      "Bash(xxd)",
+      "Bash(perl -i -pe ' *)",
+      "Bash(sed -n '/private const string Link/,/private const string MiddleDot/p' Reapo/Ui/BranchChips.cs)"
+    ]
+  }
+}
