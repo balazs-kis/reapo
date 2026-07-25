@@ -106,6 +106,78 @@ public sealed class RepoOperations
         return new RepoOutcome(repo, RepoOutcomeKind.Processed, null, branches);
     }
 
+    public async Task<RepoOutcome> SwitchToMainAsync(RepoInfo repo, CancellationToken ct)
+    {
+        string? target;
+        QuickStatus status;
+        try
+        {
+            target = _git.GetDefaultBranchName(repo.FullPath);
+            status = _git.GetQuickStatus(repo.FullPath);
+        }
+        catch (Exception ex)
+        {
+            return new RepoOutcome(repo, RepoOutcomeKind.Failed, ex.Message, []);
+        }
+
+        if (target is null)
+        {
+            return new RepoOutcome(repo, RepoOutcomeKind.Failed, "no main/master branch found", []);
+        }
+
+        if (string.Equals(status.Branch, target, StringComparison.Ordinal))
+        {
+            return new RepoOutcome(repo, RepoOutcomeKind.Processed, null,
+                [new BranchOutcome(target, BranchOutcomeKind.AlreadyUpToDate, "already on branch")]);
+        }
+
+        var stashed = false;
+        if (status.DirtyCount > 0)
+        {
+            try
+            {
+                stashed = await _git.StashPushAsync(repo.FullPath, ct);
+            }
+            catch (GitProcessException ex)
+            {
+                return new RepoOutcome(repo, RepoOutcomeKind.Failed, $"stash push failed: {ex.Stderr}", []);
+            }
+        }
+
+        try
+        {
+            await _git.SwitchAsync(repo.FullPath, target, ct);
+        }
+        catch (GitProcessException ex)
+        {
+            if (stashed)
+            {
+                try { await _git.StashPopAsync(repo.FullPath, CancellationToken.None); } catch { }
+            }
+            return new RepoOutcome(repo, RepoOutcomeKind.Failed, $"switch failed: {ex.Stderr}", []);
+        }
+
+        if (stashed)
+        {
+            try
+            {
+                await _git.StashPopAsync(repo.FullPath, CancellationToken.None);
+            }
+            catch (GitProcessException ex)
+            {
+                return new RepoOutcome(repo, RepoOutcomeKind.Processed, null,
+                    [
+                        new BranchOutcome(target, BranchOutcomeKind.Updated, "switched"),
+                        new BranchOutcome("stash pop", BranchOutcomeKind.Failed,
+                            $"conflicted; your changes are stashed — see git stash list: {ex.Stderr}"),
+                    ]);
+            }
+        }
+
+        return new RepoOutcome(repo, RepoOutcomeKind.Processed, null,
+            [new BranchOutcome(target, BranchOutcomeKind.Updated, "switched")]);
+    }
+
     public async Task<RepoOutcome> PruneAsync(RepoInfo repo, bool includeHealthyTracked, CancellationToken ct)
     {
         IReadOnlyList<BranchInfo> branches;

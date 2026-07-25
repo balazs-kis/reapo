@@ -70,6 +70,9 @@ public sealed class GitFacade
     public Task DeleteBranchAsync(string repoPath, string branchName, CancellationToken ct) =>
         _processRunner.RunAsync(repoPath, ["branch", "-D", branchName], ct);
 
+    public Task SwitchAsync(string repoPath, string branchName, CancellationToken ct) =>
+        _processRunner.RunAsync(repoPath, ["switch", branchName], ct);
+
     public async Task DiscardLocalChangesAsync(string repoPath, CancellationToken ct)
     {
         await _processRunner.RunAsync(repoPath, ["reset", "--hard", "HEAD"], ct);

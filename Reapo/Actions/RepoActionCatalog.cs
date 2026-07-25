@@ -60,6 +60,15 @@ public static class RepoActionCatalog
             Run: (repo, ops, ct) => ops.UpdateAsync(repo, useStashMechanic: true, ct),
             SkipReason: s => MainBranchNames.Contains(s.Branch) ? null : "not on main/master"),
 
+        // ---- Single repo (dangerous) ---------------------------------------
+        new RepoActionSpec(
+            Name: "Discard local changes",
+            Description: "Reset tracked files to HEAD and delete untracked files. Git-ignored files are left untouched.",
+            Severity: ActionSeverity.Dangerous,
+            AppliesTo: AppliesTo.Single,
+            Run: (repo, ops, ct) => ops.DiscardAsync(repo, ct),
+            RunningLabel: repo => $"Discarding local changes in {repo.Name}..."),
+
         // ---- Both (single + all) -------------------------------------------
         new RepoActionSpec(
             Name: "Prune untracked branches",
@@ -95,11 +104,11 @@ public static class RepoActionCatalog
             RunningLabel: repo => $"Updating {repo.Name}..."),
 
         new RepoActionSpec(
-            Name: "Discard local changes",
-            Description: "Reset tracked files to HEAD and delete untracked files. Git-ignored files are left untouched.",
-            Severity: ActionSeverity.Dangerous,
+            Name: "Switch to main",
+            Description: "Switch to main/master. Stashes and restores uncommitted changes if needed.",
+            Severity: ActionSeverity.Risky,
             AppliesTo: AppliesTo.Single,
-            Run: (repo, ops, ct) => ops.DiscardAsync(repo, ct),
-            RunningLabel: repo => $"Discarding local changes in {repo.Name}..."),
+            Run: (repo, ops, ct) => ops.SwitchToMainAsync(repo, ct),
+            RunningLabel: repo => $"Switching {repo.Name} to main..."),
     ];
 }

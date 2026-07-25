@@ -25,7 +25,9 @@ confirmation. `Ctrl-C` cancels the current action; press it twice to quit.
 - **Prune untracked branches** — delete local branches whose upstream is gone or never existed.
 - **Prune all but current and main** — delete every local branch except the current one and `main`/`master`.
 
-**Single repo** — Fetch, Update, Discard local changes, and the two Prune actions above.
+**Single repo** — Fetch, Update, Switch to main, Discard local changes, and the two Prune actions above.
+
+- **Switch to main** — switch to `main`/`master`, stashing and restoring uncommitted changes if needed.
 
 Prune actions always keep the current branch and `main`/`master`.
 

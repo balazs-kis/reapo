@@ -18,7 +18,6 @@ public sealed class ActionMenuPrompt
 
         var ordered = actions
             .OrderBy(a => (int)a.Severity)
-            .ThenBy(a => a.Name, StringComparer.OrdinalIgnoreCase)
             .ToList();
 
         var backIndex = ordered.Count;       // trailing "Back" row
