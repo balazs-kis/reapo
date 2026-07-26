@@ -1,5 +1,10 @@
 # Reap-O
 
+[![Build Status](https://github.com/balazs-kis/reapo/workflows/build-and-test/badge.svg "Build Status")](https://github.com/balazs-kis/reapo/actions?query=workflow%3A%22build-and-test%22)
+[![Coverage Status](https://codecov.io/gh/balazs-kis/reapo/branch/main/graph/badge.svg)](https://codecov.io/gh/balazs-kis/reapo)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blueviolet)](https://opensource.org/licenses/MIT)
+[![pull requests: welcome](https://img.shields.io/badge/pull%20requests-welcome-brightgreen)](https://github.com/balazs-kis/reapo/fork)
+
 An interactive terminal tool for managing a folder full of git repositories. Point it at a
 directory, and it discovers the git repos inside and lets you fetch, update, and prune branches
 across all of them or one at a time.

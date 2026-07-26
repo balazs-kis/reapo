@@ -2,6 +2,17 @@
 [Bb]in/
 [Oo]bj/
 
+# Test / coverage output
+[Tt]est[Rr]esults/
+*.trx
+*.coverage
+*.coveragexml
+coverage.*.xml
+coverage.cobertura.xml
+coverage.opencover.xml
+coverage.info
+lcov.info
+
 # IDE / editor
 .idea/
 .vs/
