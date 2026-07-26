@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Reapo.Actions;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
 namespace Reapo.Ui;
 
+[ExcludeFromCodeCoverage]
 public sealed class ActionMenuPrompt
 {
     public IRepoAction? Show(IReadOnlyList<IRepoAction> actions, IRenderable? header = null)

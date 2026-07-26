@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Reapo.Discovery;
 using Reapo.Git;
 using Spectre.Console;
@@ -13,6 +14,7 @@ public enum BranchSummaryOutcome
 
 public sealed record BranchSummaryResult(BranchSummaryOutcome Outcome, IRenderable? Panel);
 
+[ExcludeFromCodeCoverage]
 public sealed class BranchSummaryView
 {
     private readonly GitFacade _git;

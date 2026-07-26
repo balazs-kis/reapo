@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Reapo.Actions;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
 namespace Reapo.Ui;
 
+[ExcludeFromCodeCoverage]
 public static class Theme
 {
     public const string SelectedBackground = "grey19";

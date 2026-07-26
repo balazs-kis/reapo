@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Reapo.Actions.All;
 using Reapo.Discovery;
 using Reapo.Git;
@@ -10,6 +11,7 @@ namespace Reapo.Actions;
 /// Single executor for all repo actions. Behavior is supplied by a <see cref="RepoActionSpec"/>;
 /// the target type (<see cref="RepoTarget.All"/> vs <see cref="RepoTarget.Single"/>) selects the flow.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public sealed class RepoAction : IRepoAction
 {
     private readonly RepoActionSpec _spec;

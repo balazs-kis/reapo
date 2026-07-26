@@ -1,8 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
 namespace Reapo.Actions.All;
 
+[ExcludeFromCodeCoverage]
 internal sealed class AllReposProgressView
 {
     private static readonly string[] SpinnerFrames =

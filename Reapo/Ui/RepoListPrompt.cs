@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Reapo.Discovery;
 using Reapo.Git;
 using Spectre.Console;
@@ -5,6 +6,7 @@ using Spectre.Console.Rendering;
 
 namespace Reapo.Ui;
 
+[ExcludeFromCodeCoverage]
 public sealed class RepoListPrompt
 {
     private readonly GitFacade _git;

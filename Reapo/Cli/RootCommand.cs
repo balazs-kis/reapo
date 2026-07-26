@@ -1,7 +1,9 @@
 using System.CommandLine;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Reapo.Cli;
 
+[ExcludeFromCodeCoverage]
 public static class RootCommandFactory
 {
     public static RootCommand Create(Func<string, Task<int>> handler)

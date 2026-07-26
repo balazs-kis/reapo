@@ -16,7 +16,7 @@ public static class RepoActionCatalog
     public static IReadOnlyList<IRepoAction> Create(GitFacade git, RepoStatusCache cache) =>
         Specs.Select(spec => (IRepoAction)new RepoAction(spec, git, cache)).ToList();
 
-    private static readonly IReadOnlyList<RepoActionSpec> Specs =
+    internal static readonly IReadOnlyList<RepoActionSpec> Specs =
     [
         // ---- All repos ------------------------------------------------------
         new RepoActionSpec(

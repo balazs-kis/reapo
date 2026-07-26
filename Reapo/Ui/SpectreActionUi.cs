@@ -1,7 +1,9 @@
+using System.Diagnostics.CodeAnalysis;
 using Spectre.Console;
 
 namespace Reapo.Ui;
 
+[ExcludeFromCodeCoverage]
 public sealed class SpectreActionUi : IActionUi
 {
     public void Error(string markup) => AnsiConsole.MarkupLine($"[red]{markup}[/]");

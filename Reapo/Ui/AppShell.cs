@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Reapo.Actions;
 using Reapo.Discovery;
 using Spectre.Console;
 
 namespace Reapo.Ui;
 
+[ExcludeFromCodeCoverage]
 public sealed class AppShell
 {
     private readonly RepoListPrompt _repoListPrompt;

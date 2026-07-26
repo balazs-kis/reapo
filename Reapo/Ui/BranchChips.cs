@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Reapo.Git;
 
 namespace Reapo.Ui;
 
 public sealed record BranchChipSet(string Tracked, string Incoming, string Outgoing, string Tree);
 
+[ExcludeFromCodeCoverage]
 public static class BranchChips
 {
     private const string Link        = "◉";

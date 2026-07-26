@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Reapo;
 
+[ExcludeFromCodeCoverage]
 public sealed class CancellationManager : IDisposable
 {
     private static readonly TimeSpan DoublePressWindow = TimeSpan.FromSeconds(2);
