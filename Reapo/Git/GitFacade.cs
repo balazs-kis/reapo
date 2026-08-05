@@ -24,24 +24,28 @@ public sealed class GitFacade
         using var repo = new Repository(repoPath);
         var head = repo.Head;
         var branch = head?.FriendlyName ?? "(detached)";
-        var dirtyCount = CountDirtyEntries(repo);
+        var dirtyCount = CountDirtyEntries(repoPath);
 
         var hasRemote = head?.TrackedBranch != null;
         var tracking = hasRemote ? head!.TrackingDetails : null;
         return new QuickStatus(branch, dirtyCount, hasRemote, tracking?.AheadBy, tracking?.BehindBy);
     }
 
-    private static int CountDirtyEntries(Repository repo)
+    /// <summary>
+    /// Counts modified + untracked entries via `git status --porcelain`. We shell out (instead of
+    /// using LibGit2Sharp's RetrieveStatus) so the count honors ALL ignore sources: repo .gitignore,
+    /// system/global excludesfile (~/.config/git/ignore, core.excludesfile), and .git/info/exclude.
+    /// LibGit2Sharp historically ignores the global excludesfile, which caused OS-junk files
+    /// (.DS_Store, Thumbs.db, JetBrains .idea, ...) to inflate the count even though `git status`
+    /// itself and every git GUI treated the repo as clean.
+    /// </summary>
+    private int CountDirtyEntries(string repoPath)
     {
-        var status = repo.RetrieveStatus(new StatusOptions { IncludeUntracked = true });
-        return status.Modified.Count()
-             + status.Added.Count()
-             + status.Removed.Count()
-             + status.Staged.Count()
-             + status.Untracked.Count()
-             + status.Missing.Count()
-             + status.RenamedInIndex.Count()
-             + status.RenamedInWorkDir.Count();
+        var (exit, stdout, _) = _processRunner.RunCaptureSync(
+            repoPath, ["status", "--porcelain", "--untracked-files=all"]);
+        if (exit != 0) return 0;
+        // Each modified/untracked entry is one line; empty output means clean.
+        return stdout.Split('\n', StringSplitOptions.RemoveEmptyEntries).Length;
     }
 
     public Task FetchAsync(string repoPath, CancellationToken ct) =>
@@ -106,7 +110,7 @@ public sealed class GitFacade
         using var repo = new Repository(repoPath);
 
         var headCanonical = repo.Head?.CanonicalName;
-        var dirtyCount = CountDirtyEntries(repo);
+        var dirtyCount = CountDirtyEntries(repoPath);
 
         var rows = new List<BranchInfo>();
         foreach (var branch in repo.Branches.Where(b => !b.IsRemote))
